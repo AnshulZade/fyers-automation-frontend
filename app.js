@@ -29,7 +29,7 @@ window.onload = function() {
         // Redirect to the Cognito Hosted UI for User Pool authentication
         const clientId = 'ej26behrsf4ea60v8hau6ld89'; // Replace with your Cognito User Pool App Client ID
         const redirectUri = encodeURIComponent('https://anshulzade.github.io/fyers-automation-frontend/'); // Replace with your frontend URL
-        const cognitoDomain = 'https://cpy-automation.auth.ap-south-1.amazoncognito.com'; // Replace with your Cognito domain
+        const cognitoDomain = 'cpy-automation.auth.ap-south-1.amazoncognito.com'; // Replace with your Cognito domain
 
         window.location.href = `https://${cognitoDomain}/login?client_id=${clientId}&response_type=token&scope=email+openid&redirect_uri=${redirectUri}`;
     }
