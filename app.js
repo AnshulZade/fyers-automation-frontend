@@ -78,9 +78,9 @@ window.onload = function() {
             console.log('No active session found. Redirecting to Cognito Hosted UI for login.');
 
             // Redirect to the Cognito Hosted UI
-            const clientId = 'your_client_id'; // Replace with your Cognito User Pool App Client ID
-            const redirectUri = encodeURIComponent('https://your-frontend-url'); // Replace with your frontend URL
-            const cognitoDomain = 'your-domain.auth.ap-south-1.amazoncognito.com'; // Replace with your Cognito domain
+            const clientId = 'ej26behrsf4ea60v8hau6ld89'; // Replace with your Cognito User Pool App Client ID
+            const redirectUri = encodeURIComponent('https://anshulzade.github.io/fyers-automation-frontend/'); // Replace with your frontend URL
+            const cognitoDomain = 'https://cpy-automation.auth.ap-south-1.amazoncognito.com'; // Replace with your Cognito domain
 
             window.location.href = `https://${cognitoDomain}/login?client_id=${clientId}&response_type=token&scope=email+openid&redirect_uri=${redirectUri}`;
         } else {
