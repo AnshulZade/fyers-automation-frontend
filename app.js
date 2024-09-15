@@ -64,13 +64,31 @@
 // document.getElementById('order-form').addEventListener('submit', handleFormSubmit);
 // ---------------------------------------------------------------------------------------------------------
 
-// Step 1: Configure AWS Region and Credentials
-AWS.config.region = 'ap-south-1';  // Change 'ap-south-1' if your resources are in a different region.
 
-// Step 2: Initialize Cognito Identity Credentials
-AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'ap-south-1_HLccG4vNS'  // Example: 'ap-south-1:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-});
+window.onload = function() {
+    // Check for existing AWS credentials (Cognito session)
+    AWS.config.region = 'ap-south-1'; // Update to your region
+
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: 'ap-south-1_HLccG4vNS' // Update to your Identity Pool ID
+    });
+
+    AWS.config.credentials.get(function(err) {
+        if (err) {
+            console.log('No active session found. Redirecting to Cognito Hosted UI for login.');
+
+            // Redirect to the Cognito Hosted UI
+            const clientId = 'your_client_id'; // Replace with your Cognito User Pool App Client ID
+            const redirectUri = encodeURIComponent('https://your-frontend-url'); // Replace with your frontend URL
+            const cognitoDomain = 'your-domain.auth.ap-south-1.amazoncognito.com'; // Replace with your Cognito domain
+
+            window.location.href = `https://${cognitoDomain}/login?client_id=${clientId}&response_type=token&scope=email+openid&redirect_uri=${redirectUri}`;
+        } else {
+            console.log('User is authenticated. Showing the form.');
+            // The user is authenticated, so proceed to show the form and interact with DynamoDB
+        }
+    });
+};
 
 // Step 3: Create a DynamoDB DocumentClient instance
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
