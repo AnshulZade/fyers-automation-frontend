@@ -70,7 +70,7 @@ window.onload = function() {
     AWS.config.region = 'ap-south-1'; // Update to your region
 
     AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: 'ap-south-1_HLccG4vNS' // Update to your Identity Pool ID
+        IdentityPoolId: 'ap-south-1:445567115396' // Update to your Identity Pool ID
     });
 
     AWS.config.credentials.get(function(err) {
