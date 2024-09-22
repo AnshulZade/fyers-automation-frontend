@@ -20,7 +20,51 @@ window.onload = function() {
                 console.error('Error getting AWS credentials', err);
             } else {
                 console.log('AWS credentials obtained successfully.');
+
                 // User is authenticated and has AWS credentials; show the form
+                
+                // Create the DynamoDB DocumentClient inside the callback after credentials are set
+                const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+                // Add form submission event listener here since it's dependent on credentials
+                document.getElementById('order-form').addEventListener('submit', function(event) {
+                    event.preventDefault();
+
+                    // Capture form values
+                    const quantity = document.getElementById('quantity').value;
+                    const price = document.getElementById('price').value;
+                    const orderOption = document.querySelector('input[name="orderOption"]:checked')?.value;
+
+                    if (!orderOption) {
+                        alert("Please select an order option.");
+                        return;
+                    }
+
+                    // Construct data object
+                    const orderData = {
+                        symbol: "NIFTYIETF-EQ",
+                        quantity: parseInt(quantity),
+                        price: parseFloat(price),
+                        orderOption: orderOption
+                    };
+
+                    // Define DynamoDB parameters
+                    const params = {
+                        TableName: 'track_table',  // Replace with your actual DynamoDB table name
+                        Item: orderData
+                    };
+
+                    // Insert data into DynamoDB
+                    dynamoDB.put(params, function(err, data) {
+                        if (err) {
+                            console.error("Error inserting data into DynamoDB", err);
+                            alert('There was a problem with your order submission.');
+                        } else {
+                            console.log("Success", data);
+                            alert('Order submitted successfully!');
+                        }
+                    });
+                });
             }
         });
     } else {
@@ -35,47 +79,88 @@ window.onload = function() {
     }
 };
 
-// Create a DynamoDB DocumentClient instance
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-function handleFormSubmit(event) {
-    event.preventDefault();
 
-    // Capture form values
-    const quantity = document.getElementById('quantity').value;
-    const price = document.getElementById('price').value;
-    const orderOption = document.querySelector('input[name="orderOption"]:checked')?.value;
+// --------------------------------------------------------------------------------------------------------
 
-    if (!orderOption) {
-        alert("Please select an order option.");
-        return;
-    }
+// window.onload = function() {
+//     // Extract the token from the URL (if available)
+//     const urlParams = new URLSearchParams(window.location.hash.substring(1));
+//     const idToken = urlParams.get('id_token');
 
-    // Construct data object
-    const orderData = {
-        symbol: "NIFTYIETF-EQ",
-        quantity: parseInt(quantity),
-        price: parseFloat(price),
-        orderOption: orderOption
-    };
+//     if (idToken) {
+//         console.log('User is authenticated with User Pool. Setting up credentials.');
 
-    // Define DynamoDB parameters
-    const params = {
-        TableName: 'track_table',  // Replace with your actual DynamoDB table name
-        Item: orderData
-    };
+//         // Initialize AWS SDK with User Pool token for Identity Pool credentials
+//         AWS.config.region = 'ap-south-1';
+//         AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+//             IdentityPoolId: 'ap-south-1:7ab83ee6-b838-443f-a32d-d25f1bbbda3d', // Replace with your Identity Pool ID
+//             Logins: {
+//                 'cognito-idp.ap-south-1.amazonaws.com/ap-south-1_HLccG4vNS': idToken // Replace with your User Pool ID
+//             }
+//         });
 
-    // Insert data into DynamoDB
-    dynamoDB.put(params, function(err, data) {
-        if (err) {
-            console.error("Error inserting data into DynamoDB", err);
-            alert('There was a problem with your order submission.');
-        } else {
-            console.log("Success", data);
-            alert('Order submitted successfully!');
-        }
-    });
-}
+//         AWS.config.credentials.get(function(err) {
+//             if (err) {
+//                 console.error('Error getting AWS credentials', err);
+//             } else {
+//                 console.log('AWS credentials obtained successfully.');
+//                 // User is authenticated and has AWS credentials; show the form
+//             }
+//         });
+//     } else {
+//         console.log('No User Pool session found. Redirecting to Cognito Hosted UI for login.');
+        
+//         // Redirect to the Cognito Hosted UI for User Pool authentication
+//         const clientId = 'ej26behrsf4ea60v8hau6ld89'; // Replace with your Cognito User Pool App Client ID
+//         const redirectUri = encodeURIComponent('https://anshulzade.github.io/fyers-automation-frontend/'); // Replace with your frontend URL
+//         const cognitoDomain = 'cpy-automation.auth.ap-south-1.amazoncognito.com'; // Replace with your Cognito domain
+
+//         window.location.href = `https://${cognitoDomain}/login?client_id=${clientId}&response_type=token&scope=email+openid&redirect_uri=${redirectUri}`;
+//     }
+// };
+
+// // Create a DynamoDB DocumentClient instance
+// const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+// function handleFormSubmit(event) {
+//     event.preventDefault();
+
+//     // Capture form values
+//     const quantity = document.getElementById('quantity').value;
+//     const price = document.getElementById('price').value;
+//     const orderOption = document.querySelector('input[name="orderOption"]:checked')?.value;
+
+//     if (!orderOption) {
+//         alert("Please select an order option.");
+//         return;
+//     }
+
+//     // Construct data object
+//     const orderData = {
+//         symbol: "NIFTYIETF-EQ",
+//         quantity: parseInt(quantity),
+//         price: parseFloat(price),
+//         orderOption: orderOption
+//     };
+
+//     // Define DynamoDB parameters
+//     const params = {
+//         TableName: 'track_table',  // Replace with your actual DynamoDB table name
+//         Item: orderData
+//     };
+
+//     // Insert data into DynamoDB
+//     dynamoDB.put(params, function(err, data) {
+//         if (err) {
+//             console.error("Error inserting data into DynamoDB", err);
+//             alert('There was a problem with your order submission.');
+//         } else {
+//             console.log("Success", data);
+//             alert('Order submitted successfully!');
+//         }
+//     });
+// }
 
 // ---------------------------------------------------------------------------------------------------------
 
