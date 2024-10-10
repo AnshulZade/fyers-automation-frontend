@@ -2,13 +2,14 @@ window.onload = function() {
     // Extract the token from the URL (if available)
     const urlParams = new URLSearchParams(window.location.hash.substring(1));
     const idToken = urlParams.get('id_token');
-    console.log('ID Token:', idToken);
-    const decodedToken = jwtDecode(idToken);
-    console.log(decodedToken.exp); // Check if it's still valid
+    
 
 
     if (idToken) {
         console.log('User is authenticated with User Pool. Setting up credentials.');
+        console.log('ID Token:', idToken);
+        const decodedToken = jwtDecode(idToken);
+        console.log(decodedToken.exp); // Check if it's still valid
 
         // Initialize AWS SDK with User Pool token for Identity Pool credentials
         AWS.config.region = 'ap-south-1';
